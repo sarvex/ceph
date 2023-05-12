@@ -100,10 +100,7 @@ def test_create_from_peer(ctx, config):
     log.info('3. mark an osd out')
     pg_stats = manager.get_pg_stats()
     pg = random.choice(pg_stats)
-    if from_primary:
-        victim = pg['acting'][-1]
-    else:
-        victim = pg['acting'][0]
+    victim = pg['acting'][-1] if from_primary else pg['acting'][0]
     manager.mark_out_osd(victim)
     pg_states = manager.wait_till_pg_convergence(300)
     pg_stuck = pg_num_in_any_state(pg_states, 'activating', 'stale', 'peering')

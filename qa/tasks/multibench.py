@@ -45,12 +45,13 @@ def task(ctx, config):
             benchcontext = copy.copy(config.get('radosbench'))
         iterations = 0
         while time.time() - start < int(config.get('time', 600)):
-            log.info("Starting iteration %s of segment %s"%(iterations, num))
-            benchcontext['pool'] = str(num) + "-" + str(iterations)
+            log.info(f"Starting iteration {iterations} of segment {num}")
+            benchcontext['pool'] = f"{str(num)}-{str(iterations)}"
             with radosbench.task(ctx, benchcontext):
                 time.sleep()
             iterations += 1
-    log.info("Starting %s threads"%(str(config.get('segments', 3)),))
+
+    log.info(f"Starting {str(config.get('segments', 3))} threads")
     segments = [
         gevent.spawn(run_one, i)
         for i in range(0, int(config.get('segments', 3)))]
